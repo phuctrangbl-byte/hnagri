@@ -78,7 +78,7 @@ def get_ai_analysis(data_for_ai, api_key):
     except Exception as e:
         return f"Đã xảy ra lỗi không xác định: {e}"
 
-# --- Hàm Xử lý Chat tương tác (MỚI) ---
+# --- Hàm Xử lý Chat tương tác ---
 def chat_with_gemini(prompt, api_key, context_data=None):
     """Xử lý logic chat, bao gồm lịch sử hội thoại và ngữ cảnh dữ liệu."""
     try:
@@ -113,7 +113,7 @@ uploaded_file = st.file_uploader(
     type=['xlsx', 'xls']
 )
 
-# Khởi tạo state cho Lịch sử Chat (MỚI)
+# Khởi tạo state cho Lịch sử Chat
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
 
@@ -155,7 +155,10 @@ if uploaded_file is not None:
                 no_ngan_han_N_1 = df_processed[df_processed['Chỉ tiêu'].str.contains('NỢ NGẮN HẠN', case=False, na=False)]['Năm trước'].iloc[0]
 
                 thanh_toan_hien_hanh_N = tsnh_n / no_ngan_han_N
-                thanh_toan_hien_hanh_N_1 = tsnh_n_1 / no_ngan_han_han_N_1
+                
+                # ****** ĐÃ SỬA LỖI TYPO TẠI ĐÂY ******
+                thanh_toan_hien_hanh_N_1 = tsnh_n_1 / no_ngan_han_N_1
+                # *************************************
                 
                 col1, col2 = st.columns(2)
                 with col1:
@@ -208,6 +211,7 @@ if uploaded_file is not None:
     except ValueError as ve:
         st.error(f"Lỗi cấu trúc dữ liệu: {ve}")
     except Exception as e:
+        # Giữ nguyên khối này, nhưng lỗi typo đã được khắc phục ở trên
         st.error(f"Có lỗi xảy ra khi đọc hoặc xử lý file: {e}. Vui lòng kiểm tra định dạng file.")
 
 else:
@@ -215,7 +219,7 @@ else:
     data_for_ai = "" # Đảm bảo biến này tồn tại cho phần chat
 
 # ==============================================================================
-#                 PHẦN KHUNG CHAT MỚI (Đặt trong Sidebar)
+#                 PHẦN KHUNG CHAT (Đặt trong Sidebar)
 # ==============================================================================
 st.sidebar.title("💬 Trợ lý Chat Tài chính (Gemini)")
 st.sidebar.markdown("Sử dụng khung chat này để đặt câu hỏi chi tiết về dữ liệu tài chính bạn vừa tải lên.")
